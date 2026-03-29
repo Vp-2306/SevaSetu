@@ -29,6 +29,7 @@ class GradientCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(color: AppColors.border),
             boxShadow: [AppColors.cardShadow],
           ),
           child: Row(
