@@ -197,12 +197,12 @@ class _VolunteerDashboard extends ConsumerWidget {
                                   horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                 color: selected
-                                    ? AppColors.secondary
+                                    ? AppColors.primary
                                     : AppColors.surface,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: selected
-                                      ? AppColors.secondary
+                                      ? AppColors.primary
                                       : AppColors.border,
                                 ),
                               ),
