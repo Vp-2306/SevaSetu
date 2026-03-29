@@ -47,7 +47,7 @@ class TaskCard extends StatelessWidget {
                   color: AppColors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(color: AppColors.surfaceElevated, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: AppColors.surfaceVariant, borderRadius: BorderRadius.circular(4)),
                   child: Text('2.3 ${AppStrings.kmAway}', style: AppTextStyles.labelSmall.copyWith(
                     color: AppColors.textSecondary)),
                 ),
@@ -56,7 +56,7 @@ class TaskCard extends StatelessWidget {
               if (need.requiredSkills.isNotEmpty) Wrap(spacing: 6, runSpacing: 4, children: [
                 ...need.requiredSkills.take(2).map((s) => Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: AppColors.surfaceElevated, borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(color: AppColors.surfaceVariant, borderRadius: BorderRadius.circular(6)),
                   child: Text(s, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary)),
                 )),
                 if (need.requiredSkills.length > 2) Text('+${need.requiredSkills.length - 2} more',

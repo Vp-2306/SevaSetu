@@ -41,17 +41,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo
+            // Logo with gradient
             Container(
               width: 88,
               height: 88,
               decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-                borderRadius: BorderRadius.circular(16),
+                gradient: const LinearGradient(
+                  colors: AppColors.gradientPrimary,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.4),
-                    blurRadius: 30,
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 24,
                     offset: const Offset(0, 8),
                   ),
                 ],
@@ -70,23 +74,58 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 .fadeIn(duration: 600.ms)
                 .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
             const SizedBox(height: 24),
-            // App name
             Text(
               AppStrings.appName,
-              style: AppTextStyles.headlineLarge,
+              style: AppTextStyles.headlineLarge.copyWith(
+                color: AppColors.textPrimary,
+              ),
             )
                 .animate(delay: 200.ms)
                 .fadeIn(duration: 500.ms)
                 .slideY(begin: 0.3, end: 0),
             const SizedBox(height: 8),
-            // Tagline
             Text(
               AppStrings.tagline,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
             ).animate(delay: 400.ms).fadeIn(duration: 500.ms),
+            const SizedBox(height: 48),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _TechPill(label: 'AI-Powered'),
+                const SizedBox(width: 8),
+                _TechPill(label: 'NGO Network'),
+                const SizedBox(width: 8),
+                _TechPill(label: 'Built for Bharat'),
+              ],
+            ).animate(delay: 600.ms).fadeIn(duration: 500.ms),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TechPill extends StatelessWidget {
+  final String label;
+  const _TechPill({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLight,
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: AppColors.primaryMedium),
+      ),
+      child: Text(
+        label,
+        style: AppTextStyles.labelSmall.copyWith(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

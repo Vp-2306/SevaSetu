@@ -24,9 +24,9 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surface,
-        border: const Border(
+        border: Border(
           top: BorderSide(color: AppColors.border),
         ),
       ),
@@ -44,21 +44,20 @@ class CustomBottomNav extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: isSelected
-                        ? BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          )
-                        : null,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          items[index].icon,
-                          color: isSelected
-                              ? AppColors.primary
-                              : AppColors.textMuted,
-                          size: 24,
+                        AnimatedScale(
+                          scale: isSelected ? 1.1 : 1.0,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOut,
+                          child: Icon(
+                            items[index].icon,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.textMuted,
+                            size: 24,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -73,6 +72,16 @@ class CustomBottomNav extends StatelessWidget {
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: isSelected ? 6 : 0,
+                          height: isSelected ? 6 : 0,
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ],
                     ),

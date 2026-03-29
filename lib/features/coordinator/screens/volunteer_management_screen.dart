@@ -57,7 +57,7 @@ class VolunteerManagementScreen extends ConsumerWidget {
                   const SizedBox(height: 6),
                   Wrap(spacing: 4, children: v.skills.take(3).map((s) => Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(color: AppColors.surfaceElevated, borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: AppColors.surfaceVariant, borderRadius: BorderRadius.circular(4)),
                     child: Text(s, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textMuted, fontSize: 10)),
                   )).toList()),
                 ])),

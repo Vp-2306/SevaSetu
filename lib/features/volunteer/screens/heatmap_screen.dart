@@ -16,7 +16,7 @@ class HeatmapScreen extends StatelessWidget {
         // Placeholder map
         Container(
           width: double.infinity, height: double.infinity,
-          color: const Color(0xFF0D1117),
+          color: const Color(0xFFE8F0F7),
           child: CustomPaint(painter: _MockMapPainter()),
         ),
         // Legend
@@ -69,7 +69,7 @@ class HeatmapScreen extends StatelessWidget {
 class _MockMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0xFF1A1F2E)..style = PaintingStyle.stroke..strokeWidth = 0.5;
+    final paint = Paint()..color = const Color(0xFFCBD5E1)..style = PaintingStyle.stroke..strokeWidth = 0.5;
     // Draw grid lines as mock map
     for (double x = 0; x < size.width; x += 40) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
@@ -100,7 +100,7 @@ class _ZoneCircle extends StatelessWidget {
           border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
         ),
         child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(label, style: AppTextStyles.labelSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+          Text(label, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600)),
           if (count > 0) Text('$count', style: AppTextStyles.labelSmall.copyWith(color: color)),
         ])),
       ).animate().fadeIn(duration: 600.ms).scale(begin: const Offset(0.5, 0.5)),

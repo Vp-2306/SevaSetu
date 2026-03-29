@@ -212,7 +212,7 @@ class _VoiceSurveyScreenState extends ConsumerState<VoiceSurveyScreen>
         child: Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: AppColors.surfaceElevated,
+            color: AppColors.surfaceVariant,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [

@@ -84,7 +84,7 @@ class _MethodCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.surfaceElevated,
+          color: AppColors.surfaceVariant,
           borderRadius: BorderRadius.circular(16),
           border: isGradientBorder ? null : Border.all(color: AppColors.border),
           gradient: isGradientBorder ? null : null,

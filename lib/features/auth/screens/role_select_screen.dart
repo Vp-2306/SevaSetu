@@ -15,24 +15,27 @@ class RoleSelectScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final roles = [
       _RoleData(
-        icon: Icons.camera_alt,
-        color: AppColors.accent,
+        icon: Icons.camera_alt_rounded,
+        gradientColors: AppColors.gradientSurveyor,
         title: AppStrings.fieldSurveyor,
         subtitle: AppStrings.surveyorSubtitle,
+        features: ['Voice & photo surveys', 'AI data extraction', 'Offline capable'],
         role: 'surveyor',
       ),
       _RoleData(
-        icon: Icons.volunteer_activism,
-        color: AppColors.secondary,
+        icon: Icons.volunteer_activism_rounded,
+        gradientColors: AppColors.gradientVolunteer,
         title: AppStrings.volunteer,
         subtitle: AppStrings.volunteerSubtitle,
+        features: ['Skill-matched tasks', 'Credits & streaks', 'Impact certificate'],
         role: 'volunteer',
       ),
       _RoleData(
-        icon: Icons.dashboard,
-        color: AppColors.primary,
+        icon: Icons.dashboard_rounded,
+        gradientColors: AppColors.gradientCoordinator,
         title: AppStrings.ngoCoordinator,
         subtitle: AppStrings.coordinatorSubtitle,
+        features: ['Review surveys', 'Assign volunteers', 'Analytics dashboard'],
         role: 'coordinator',
       ),
     ];
@@ -45,11 +48,20 @@ class RoleSelectScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 48),
               Text(
-                AppStrings.whoAreYou,
-                style: AppTextStyles.headlineLarge.copyWith(fontSize: 32),
+                'Welcome to',
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
               ).animate().fadeIn(duration: 400.ms),
+              Text(
+                AppStrings.appName,
+                style: AppTextStyles.headlineLarge.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ).animate().fadeIn(duration: 400.ms, delay: 50.ms),
               const SizedBox(height: 8),
               Text(
                 AppStrings.selectRole,
@@ -57,7 +69,7 @@ class RoleSelectScreen extends ConsumerWidget {
                   color: AppColors.textSecondary,
                 ),
               ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
               ...List.generate(roles.length, (index) {
                 final role = roles[index];
                 return Padding(
@@ -107,16 +119,18 @@ class RoleSelectScreen extends ConsumerWidget {
 
 class _RoleData {
   final IconData icon;
-  final Color color;
+  final List<Color> gradientColors;
   final String title;
   final String subtitle;
+  final List<String> features;
   final String role;
 
   const _RoleData({
     required this.icon,
-    required this.color,
+    required this.gradientColors,
     required this.title,
     required this.subtitle,
+    required this.features,
     required this.role,
   });
 }
@@ -134,50 +148,83 @@ class _RoleCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        splashColor: AppColors.primary.withValues(alpha: 0.2),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.surfaceElevated,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.border),
+            boxShadow: [AppColors.cardShadow],
           ),
           child: Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 52,
+                height: 52,
                 decoration: BoxDecoration(
-                  color: data.color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: data.gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(data.icon, color: data.color, size: 24),
+                child: Icon(data.icon, color: Colors.white, size: 26),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       data.title,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        fontWeight: FontWeight.w600,
-                        height: 1.2,
+                      style: AppTextStyles.labelLarge.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       data.subtitle,
-                      style: AppTextStyles.labelLarge.copyWith(
+                      style: AppTextStyles.labelSmall.copyWith(
                         color: AppColors.textMuted,
                       ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: data.features.map((f) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceVariant,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          f,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 10,
+                          ),
+                        ),
+                      )).toList(),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.chevron_right,
-                color: AppColors.textMuted,
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: data.gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.chevron_right, color: Colors.white, size: 18),
               ),
             ],
           ),
