@@ -47,102 +47,197 @@ class _SurveyorDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final surveyor = ref.watch(surveyorProvider);
     final now = DateTime.now();
-    final greeting = now.hour < 12 ? 'Good morning' : (now.hour < 17 ? 'Good afternoon' : 'Good evening');
+    final greeting = now.hour < 12
+        ? 'Good morning'
+        : (now.hour < 17 ? 'Good afternoon' : 'Good evening');
 
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async => await Future.delayed(const Duration(seconds: 1)),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('$greeting, Arjun', style: AppTextStyles.headlineMedium)
-                          .animate().fadeIn(duration: 400.ms),
-                      Text(DateFormat('EEEE, d MMMM yyyy').format(now),
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted)),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.success.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(width: 8, height: 8, decoration: BoxDecoration(
-                          color: AppColors.success, shape: BoxShape.circle)),
-                        const SizedBox(width: 6),
-                        Text(AppStrings.synced, style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.success)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              // Stats row
-              Row(
-                children: [
-                  _StatCard(label: AppStrings.today, value: '${surveyor.todayCount}', color: AppColors.primary),
-                  const SizedBox(width: 12),
-                  _StatCard(label: AppStrings.thisWeek, value: '${surveyor.weekCount}', color: AppColors.accent),
-                  const SizedBox(width: 12),
-                  _StatCard(label: AppStrings.pendingReview, value: '${surveyor.pendingCount}', color: AppColors.warning),
-                ].animate(interval: 80.ms).fadeIn(duration: 400.ms).slideY(begin: 0.05),
-              ),
-              const SizedBox(height: 24),
-              // Big action card
-              GestureDetector(
-                onTap: () => context.push(AppRoutes.newSurvey),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.3),
-                      blurRadius: 20, offset: const Offset(0, 8))],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(AppStrings.startNewSurvey, style: AppTextStyles.titleLarge.copyWith(color: Colors.white)),
-                      const SizedBox(height: 4),
-                      Text(AppStrings.voicePhotoOrManual, style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white.withValues(alpha: 0.8))),
-                      const SizedBox(height: 16),
-                      Row(children: [
-                        Icon(Icons.mic, color: Colors.white.withValues(alpha: 0.9), size: 28),
-                        const SizedBox(width: 12),
-                        Icon(Icons.camera_alt, color: Colors.white.withValues(alpha: 0.9), size: 28),
-                        const SizedBox(width: 12),
-                        Icon(Icons.edit_note, color: Colors.white.withValues(alpha: 0.9), size: 28),
-                      ]),
-                    ],
+              // Gradient header
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.gradientSurveyor,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                 ),
-              ).animate().fadeIn(duration: 400.ms, delay: 200.ms).slideY(begin: 0.05),
-              const SizedBox(height: 32),
-              Text(AppStrings.recentSurveys, style: AppTextStyles.titleLarge),
-              const SizedBox(height: 16),
-              ...List.generate(surveyor.surveys.length, (index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: SurveyCard(survey: surveyor.surveys[index]),
-                ).animate(delay: (index * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05);
-              }),
-              const SizedBox(height: 24),
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '$greeting, Arjun',
+                              style: AppTextStyles.headlineMedium.copyWith(
+                                color: Colors.white,
+                              ),
+                            ).animate().fadeIn(duration: 400.ms),
+                            Text(
+                              DateFormat('EEEE, d MMMM yyyy').format(now),
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF4ADE80),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                AppStrings.synced,
+                                style: AppTextStyles.labelSmall.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    // Stats row on header
+                    Row(
+                      children: [
+                        _StatChip(
+                          label: AppStrings.today,
+                          value: '${surveyor.todayCount}',
+                        ),
+                        const SizedBox(width: 10),
+                        _StatChip(
+                          label: AppStrings.thisWeek,
+                          value: '${surveyor.weekCount}',
+                        ),
+                        const SizedBox(width: 10),
+                        _StatChip(
+                          label: AppStrings.pendingReview,
+                          value: '${surveyor.pendingCount}',
+                          highlight: true,
+                        ),
+                      ],
+                    ).animate(interval: 80.ms).fadeIn(duration: 400.ms),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Big action card
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.newSurvey),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [AppColors.cardShadow],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: AppColors.gradientSurveyor,
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: const Icon(Icons.add_circle_outline,
+                                  color: Colors.white, size: 26),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppStrings.startNewSurvey,
+                                    style: AppTextStyles.labelLarge.copyWith(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    AppStrings.voicePhotoOrManual,
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      color: AppColors.textMuted,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(children: [
+                                    _MethodPill(icon: Icons.mic, label: 'Voice'),
+                                    const SizedBox(width: 6),
+                                    _MethodPill(icon: Icons.camera_alt, label: 'Photo'),
+                                    const SizedBox(width: 6),
+                                    _MethodPill(icon: Icons.edit_note, label: 'Manual'),
+                                  ]),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.chevron_right,
+                                color: AppColors.textMuted),
+                          ],
+                        ),
+                      ),
+                    ).animate().fadeIn(duration: 400.ms, delay: 200.ms).slideY(begin: 0.05),
+                    const SizedBox(height: 28),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppStrings.recentSurveys, style: AppTextStyles.titleLarge),
+                        Text(
+                          'View All',
+                          style: AppTextStyles.labelLarge.copyWith(
+                              color: AppColors.accent),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ...List.generate(surveyor.surveys.length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: SurveyCard(survey: surveyor.surveys[index]),
+                      ).animate(delay: (index * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05);
+                    }),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -151,31 +246,80 @@ class _SurveyorDashboard extends ConsumerWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
+class _StatChip extends StatelessWidget {
   final String label;
   final String value;
-  final Color color;
+  final bool highlight;
 
-  const _StatCard({required this.label, required this.value, required this.color});
+  const _StatChip({
+    required this.label,
+    required this.value,
+    this.highlight = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border),
+          color: highlight
+              ? Colors.white.withValues(alpha: 0.25)
+              : Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(12),
+          border: highlight
+              ? Border.all(color: Colors.white.withValues(alpha: 0.5))
+              : null,
         ),
         child: Column(
           children: [
-            Text(value, style: AppTextStyles.headlineLarge.copyWith(color: color)),
-            const SizedBox(height: 4),
-            Text(label, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textMuted),
-              textAlign: TextAlign.center),
+            Text(
+              value,
+              style: AppTextStyles.headlineMedium.copyWith(
+                color: Colors.white,
+                fontSize: 22,
+              ),
+            ),
+            Text(
+              label,
+              style: AppTextStyles.labelSmall.copyWith(
+                color: Colors.white.withValues(alpha: 0.85),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _MethodPill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _MethodPill({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceVariant,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 11, color: AppColors.textSecondary),
+          const SizedBox(width: 3),
+          Text(
+            label,
+            style: AppTextStyles.labelSmall.copyWith(
+              fontSize: 10,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

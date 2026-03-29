@@ -50,100 +50,220 @@ class _VolunteerDashboard extends ConsumerWidget {
 
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(height: 16),
-          // Top section
-          Row(children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Gradient header
             Container(
-              width: 48, height: 48,
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient, shape: BoxShape.circle),
-              child: Center(child: Text(profile.initials,
-                style: AppTextStyles.labelLarge.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Hi, ${profile.name.split(' ').first}!', style: AppTextStyles.titleLarge),
-              Row(children: [
-                Icon(Icons.local_fire_department, size: 16, color: AppColors.warning),
-                const SizedBox(width: 4),
-                Text('${AppStrings.credits}: ${profile.credits}',
-                  style: AppTextStyles.labelLarge.copyWith(color: AppColors.warning)),
-              ]),
-            ])),
-          ]).animate().fadeIn(duration: 400.ms),
-          const SizedBox(height: 16),
-          if (profile.streakDays > 0) ...[
-            StreakBanner(streakDays: profile.streakDays)
-                .animate().fadeIn(duration: 400.ms, delay: 100.ms),
-            const SizedBox(height: 20),
-          ],
-          // Urgent banner
-          if (vol.matchedTasks.any((t) => t.urgency >= 5))
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: AppColors.danger.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
-              ),
-              child: Row(children: [
-                Icon(Icons.warning, color: AppColors.danger, size: 20),
-                const SizedBox(width: 8),
-                Expanded(child: Text('${AppStrings.urgent} need nearby — tap to help',
-                  style: AppTextStyles.labelLarge.copyWith(color: AppColors.danger))),
-              ]),
-            ).animate().fadeIn().shimmer(duration: 2000.ms, color: AppColors.danger.withValues(alpha: 0.3)),
-          // Filter chips
-          Row(children: [
-            Text(AppStrings.tasksMatchedForYou, style: AppTextStyles.titleLarge),
-            const Spacer(),
-            Icon(Icons.filter_list, color: AppColors.textMuted, size: 20),
-          ]),
-          const SizedBox(height: 12),
-          SizedBox(height: 36, child: ListView(scrollDirection: Axis.horizontal, children:
-            filters.map((f) {
-              final selected = f == vol.selectedFilter;
-              return Padding(padding: const EdgeInsets.only(right: 8), child: GestureDetector(
-                onTap: () => ref.read(volunteerProvider).setFilter(f),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: selected ? AppColors.primary : AppColors.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: selected ? AppColors.primary : AppColors.border),
-                  ),
-                  child: Text(f, style: AppTextStyles.labelSmall.copyWith(
-                    color: selected ? Colors.white : AppColors.textMuted)),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: AppColors.gradientVolunteer,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              ));
-            }).toList(),
-          )),
-          const SizedBox(height: 16),
-          // Tasks list
-          if (vol.matchedTasks.isEmpty)
-            Padding(padding: const EdgeInsets.symmetric(vertical: 48), child: Center(
-              child: Column(children: [
-                Icon(Icons.search_off, size: 64, color: AppColors.textMuted),
-                const SizedBox(height: 16),
-                Text(AppStrings.noTasksMatch, style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary), textAlign: TextAlign.center),
-              ]),
-            ))
-          else
-            ...List.generate(vol.matchedTasks.length, (i) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: TaskCard(
-                need: vol.matchedTasks[i],
-                onAccept: () => ref.read(volunteerProvider).acceptTask(vol.matchedTasks[i].id),
-                onTap: () => context.push('/volunteer/task/${vol.matchedTasks[i].id}'),
               ),
-            ).animate(delay: (i * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05)),
-          const SizedBox(height: 24),
-        ]),
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            profile.initials,
+                            style: AppTextStyles.labelLarge.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hi, ${profile.name.split(' ').first}!',
+                              style: AppTextStyles.titleLarge.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Row(children: [
+                              Icon(Icons.local_fire_department,
+                                  size: 14, color: Colors.amber.shade300),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${AppStrings.credits}: ${profile.credits}',
+                                style: AppTextStyles.labelSmall.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                ),
+                              ),
+                            ]),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ).animate().fadeIn(duration: 400.ms),
+                  if (profile.streakDays > 0) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(children: [
+                        const Text('🔥', style: TextStyle(fontSize: 18)),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${profile.streakDays}-day streak! Keep going!',
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ]),
+                    ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
+                  ],
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  // Urgent banner
+                  if (vol.matchedTasks.any((t) => t.urgency >= 5))
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.dangerLight,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.danger.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(children: [
+                        Icon(Icons.warning, color: AppColors.danger, size: 20),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '${AppStrings.urgent} need nearby — tap to help',
+                            style: AppTextStyles.labelLarge.copyWith(
+                              color: AppColors.danger,
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ).animate().fadeIn().shimmer(
+                          duration: 2000.ms,
+                          color: AppColors.danger.withValues(alpha: 0.2),
+                        ),
+                  // Filter chips
+                  Row(children: [
+                    Text(AppStrings.tasksMatchedForYou, style: AppTextStyles.titleLarge),
+                    const Spacer(),
+                    Icon(Icons.filter_list, color: AppColors.textMuted, size: 20),
+                  ]),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 36,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: filters.map((f) {
+                        final selected = f == vol.selectedFilter;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: GestureDetector(
+                            onTap: () => ref.read(volunteerProvider).setFilter(f),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: selected
+                                    ? AppColors.secondary
+                                    : AppColors.surface,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: selected
+                                      ? AppColors.secondary
+                                      : AppColors.border,
+                                ),
+                              ),
+                              child: Text(
+                                f,
+                                style: AppTextStyles.labelSmall.copyWith(
+                                  color: selected
+                                      ? Colors.white
+                                      : AppColors.textMuted,
+                                  fontWeight: selected
+                                      ? FontWeight.w600
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Tasks list
+                  if (vol.matchedTasks.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 48),
+                      child: Center(
+                        child: Column(children: [
+                          Icon(Icons.search_off,
+                              size: 64, color: AppColors.textMuted),
+                          const SizedBox(height: 16),
+                          Text(
+                            AppStrings.noTasksMatch,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ]),
+                      ),
+                    )
+                  else
+                    ...List.generate(
+                      vol.matchedTasks.length,
+                      (i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: TaskCard(
+                          need: vol.matchedTasks[i],
+                          onAccept: () => ref
+                              .read(volunteerProvider)
+                              .acceptTask(vol.matchedTasks[i].id),
+                          onTap: () => context.push(
+                              '/volunteer/task/${vol.matchedTasks[i].id}'),
+                        ),
+                      ).animate(delay: (i * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05),
+                    ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

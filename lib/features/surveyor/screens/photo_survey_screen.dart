@@ -61,7 +61,7 @@ class _PhotoSurveyScreenState extends ConsumerState<PhotoSurveyScreen> {
               width: double.infinity,
               height: 220,
               decoration: BoxDecoration(
-                color: AppColors.surfaceElevated,
+                color: AppColors.surfaceVariant,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
               ),

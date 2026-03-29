@@ -42,7 +42,7 @@ class VolunteerAssignmentCard extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(value: matchScore, minHeight: 6,
-                backgroundColor: AppColors.surfaceElevated,
+                backgroundColor: AppColors.surfaceVariant,
                 color: matchScore > 0.7 ? AppColors.success : AppColors.warning))),
             const SizedBox(width: 8),
             Text('${(matchScore * 100).round()}%', style: AppTextStyles.labelSmall.copyWith(

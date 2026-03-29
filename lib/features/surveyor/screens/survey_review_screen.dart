@@ -99,7 +99,7 @@ class _SurveyReviewScreenState extends State<SurveyReviewScreen> {
       context: context, barrierDismissible: false,
       builder: (_) => Center(child: Container(
         padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(color: AppColors.surfaceElevated, borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(color: AppColors.surfaceVariant, borderRadius: BorderRadius.circular(16)),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.check_circle, color: AppColors.success, size: 64)
               .animate().scale(duration: 600.ms, curve: Curves.elasticOut),

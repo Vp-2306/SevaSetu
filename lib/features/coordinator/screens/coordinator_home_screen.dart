@@ -51,62 +51,143 @@ class _CoordinatorDashboard extends ConsumerWidget {
     final coord = ref.watch(coordinatorProvider);
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(height: 16),
-          Row(children: [
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('SevaSetu NGO', style: AppTextStyles.labelLarge.copyWith(color: AppColors.textMuted)),
-              Text('Dr. Meera Patel', style: AppTextStyles.headlineMedium),
-            ])),
-            IconButton(
-              icon: Badge(
-                label: Text('${coord.pendingSurveyCount}'),
-                child: const Icon(Icons.notifications_outlined),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Gradient header
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: AppColors.gradientCoordinator,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: () => _showCrisisDialog(context, ref),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppColors.danger),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'SevaSetu NGO',
+                            style: AppTextStyles.labelLarge.copyWith(
+                              color: Colors.white.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          Text(
+                            'Dr. Meera Patel',
+                            style: AppTextStyles.headlineMedium.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Badge(
+                      label: Text(
+                        '${coord.pendingSurveyCount}',
+                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                      backgroundColor: AppColors.danger,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.notifications_outlined,
+                            color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _showCrisisDialog(context, ref),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.danger,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          AppStrings.crisis,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]).animate().fadeIn(duration: 400.ms),
+                ],
               ),
-              child: Text(AppStrings.crisis, style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.danger, fontWeight: FontWeight.w700)),
             ),
-          ]).animate().fadeIn(duration: 400.ms),
-          const SizedBox(height: 24),
-          // Dashboard grid
-          GridView.count(
-            crossAxisCount: 2, shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 12, mainAxisSpacing: 12,
-            childAspectRatio: 1.4,
-            children: [
-              StatsCard(title: AppStrings.openNeeds, value: '${coord.openNeedsCount}', color: AppColors.primary, icon: Icons.assignment),
-              StatsCard(title: AppStrings.pendingSurveyReviews, value: '${coord.pendingSurveyCount}', color: AppColors.warning, icon: Icons.rate_review),
-              StatsCard(title: AppStrings.activeVolunteers, value: '${coord.activeVolunteerCount}', color: AppColors.success, icon: Icons.people),
-              StatsCard(title: AppStrings.tasksCompletedWeek, value: '${coord.completedThisWeek}', color: AppColors.secondary, icon: Icons.check_circle),
-            ],
-          ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
-          const SizedBox(height: 32),
-          Text(AppStrings.surveysAwaitingReview, style: AppTextStyles.titleLarge),
-          const SizedBox(height: 16),
-          ...List.generate(coord.pendingSurveys.length, (i) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: NeedApprovalCard(
-              survey: coord.pendingSurveys[i],
-              onTap: () => context.push('${AppRoutes.coordinatorReview}/${coord.pendingSurveys[i].id}'),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Dashboard grid
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.4,
+                    children: [
+                      StatsCard(
+                        title: AppStrings.openNeeds,
+                        value: '${coord.openNeedsCount}',
+                        color: AppColors.primary,
+                        icon: Icons.assignment,
+                      ),
+                      StatsCard(
+                        title: AppStrings.pendingSurveyReviews,
+                        value: '${coord.pendingSurveyCount}',
+                        color: AppColors.warning,
+                        icon: Icons.rate_review,
+                      ),
+                      StatsCard(
+                        title: AppStrings.activeVolunteers,
+                        value: '${coord.activeVolunteerCount}',
+                        color: AppColors.success,
+                        icon: Icons.people,
+                      ),
+                      StatsCard(
+                        title: AppStrings.tasksCompletedWeek,
+                        value: '${coord.completedThisWeek}',
+                        color: AppColors.secondary,
+                        icon: Icons.check_circle,
+                      ),
+                    ],
+                  ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
+                  const SizedBox(height: 28),
+                  Text(AppStrings.surveysAwaitingReview, style: AppTextStyles.titleLarge),
+                  const SizedBox(height: 16),
+                  ...List.generate(coord.pendingSurveys.length, (i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: NeedApprovalCard(
+                      survey: coord.pendingSurveys[i],
+                      onTap: () => context.push(
+                          '${AppRoutes.coordinatorReview}/${coord.pendingSurveys[i].id}'),
+                    ),
+                  ).animate(delay: (i * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05)),
+                  const SizedBox(height: 28),
+                  Text(AppStrings.recentActivity, style: AppTextStyles.titleLarge),
+                  const SizedBox(height: 12),
+                  ..._buildActivityFeed(),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
-          ).animate(delay: (i * 80).ms).fadeIn(duration: 400.ms).slideY(begin: 0.05)),
-          const SizedBox(height: 24),
-          Text(AppStrings.recentActivity, style: AppTextStyles.titleLarge),
-          const SizedBox(height: 12),
-          ..._buildActivityFeed(),
-          const SizedBox(height: 24),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -121,35 +202,54 @@ class _CoordinatorDashboard extends ConsumerWidget {
     return activities.map((a) => Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(children: [
-        Container(width: 32, height: 32, decoration: BoxDecoration(
-          color: a.$3.withValues(alpha: 0.15), shape: BoxShape.circle),
-          child: Icon(a.$2, size: 16, color: a.$3)),
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: a.$3.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(a.$2, size: 18, color: a.$3),
+        ),
         const SizedBox(width: 12),
         Expanded(child: Text(a.$1, style: AppTextStyles.bodyMedium)),
-        Text(a.$4, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textMuted)),
+        Text(a.$4,
+            style: AppTextStyles.labelSmall.copyWith(
+                color: AppColors.textMuted)),
       ]),
     )).toList();
   }
 
   void _showCrisisDialog(BuildContext context, WidgetRef ref) {
-    showDialog(context: context, builder: (_) => AlertDialog(
-      title: Row(children: [
-        Icon(Icons.warning, color: AppColors.danger),
-        const SizedBox(width: 8),
-        Text(AppStrings.crisis),
-      ]),
-      content: Text(AppStrings.crisisConfirmation),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text(AppStrings.cancel)),
-        ElevatedButton(
-          onPressed: () { Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Emergency broadcast sent to all volunteers!')));
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
-          child: Text(AppStrings.confirm),
-        ),
-      ],
-    ));
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Row(children: [
+          Icon(Icons.warning, color: AppColors.danger),
+          const SizedBox(width: 8),
+          Text(AppStrings.crisis),
+        ]),
+        content: Text(AppStrings.crisisConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppStrings.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Emergency broadcast sent to all volunteers!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.danger,
+            ),
+            child: Text(AppStrings.confirm),
+          ),
+        ],
+      ),
+    );
   }
 }

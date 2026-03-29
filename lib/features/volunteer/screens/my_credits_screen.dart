@@ -54,7 +54,7 @@ class MyCreditsScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               ClipRRect(borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(value: progress.clamp(0.0, 1.0),
-                  backgroundColor: AppColors.surfaceElevated, color: nextMilestone.$4, minHeight: 8)),
+                  backgroundColor: AppColors.surfaceVariant, color: nextMilestone.$4, minHeight: 8)),
             ]),
           ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
           const SizedBox(height: 24),

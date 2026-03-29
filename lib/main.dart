@@ -113,7 +113,7 @@ class SevasetuApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'SevaSetu',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
       routerConfig: router,
     );
   }
