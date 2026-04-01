@@ -79,7 +79,7 @@ class _CoordinatorDashboard extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            'Dr. Meera Patel',
+                            'Dr. Garvit Surana',
                             style: AppTextStyles.headlineMedium.copyWith(
                               color: Colors.white,
                             ),

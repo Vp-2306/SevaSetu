@@ -18,13 +18,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _otpSent = false;
-  final _otpController = TextEditingController();
-
-  bool get isCoordinator => widget.role == 'coordinator';
 
   List<Color> get _gradientColors {
     switch (widget.role) {
@@ -37,12 +32,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  String get _roleTitle {
+    switch (widget.role) {
+      case 'surveyor':
+        return 'Surveyor Login';
+      case 'coordinator':
+        return 'Coordinator Login';
+      default:
+        return 'Volunteer Login';
+    }
+  }
+
   @override
   void dispose() {
-    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _otpController.dispose();
     super.dispose();
   }
 
@@ -81,16 +85,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isCoordinator ? 'Coordinator Login' : 'Welcome Back',
+                            _roleTitle,
                             style: AppTextStyles.headlineLarge.copyWith(
                               color: Colors.white,
                             ),
                           ).animate().fadeIn(duration: 400.ms),
                           const SizedBox(height: 6),
                           Text(
-                            isCoordinator
-                                ? 'Sign in with your NGO email'
-                                : 'Sign in with your phone number',
+                            'Sign in with your email',
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: Colors.white.withValues(alpha: 0.85),
                             ),
@@ -118,56 +120,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (isCoordinator) ...[
-                      TextField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                        decoration: const InputDecoration(
-                          hintText: AppStrings.enterEmail,
-                          prefixIcon: Icon(Icons.email_outlined),
-                        ),
-                      ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                        decoration: const InputDecoration(
-                          hintText: AppStrings.enterPassword,
-                          prefixIcon: Icon(Icons.lock_outline),
-                        ),
-                      ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
-                    ] else ...[
-                      if (!_otpSent) ...[
-                        TextField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                          decoration: const InputDecoration(
-                            hintText: AppStrings.enterPhone,
-                            prefixIcon: Icon(Icons.phone_outlined),
-                            prefixText: '+91 ',
-                          ),
-                        ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
-                      ] else ...[
-                        TextField(
-                          controller: _otpController,
-                          keyboardType: TextInputType.number,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                          maxLength: 6,
-                          decoration: const InputDecoration(
-                            hintText: AppStrings.enterOtp,
-                            prefixIcon: Icon(Icons.pin_outlined),
-                          ),
-                        ).animate().fadeIn(duration: 400.ms),
-                      ],
-                    ],
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: AppStrings.enterEmail,
+                        prefixIcon: Icon(Icons.email_outlined),
+                      ),
+                    ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: AppStrings.enterPassword,
+                        prefixIcon: Icon(Icons.lock_outline),
+                      ),
+                    ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
                     const SizedBox(height: 28),
                     PrimaryButton(
-                      text: isCoordinator
-                          ? AppStrings.login
-                          : (_otpSent ? AppStrings.verifyOtp : AppStrings.sendOtp),
+                      text: AppStrings.login,
                       isLoading: auth.isLoading,
                       gradientColors: _gradientColors,
                       onPressed: () => _handleAuth(ref),
@@ -175,7 +153,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 16),
                     Center(
                       child: GestureDetector(
-                        onTap: () => context.push(AppRoutes.register, extra: widget.role),
+                        onTap: () => context.push(
+                          AppRoutes.register,
+                          extra: widget.role,
+                        ),
                         child: Text(
                           'New here? Create an account',
                           style: AppTextStyles.bodyMedium.copyWith(
@@ -195,7 +176,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.error_outline, size: 16, color: AppColors.danger),
+                            Icon(Icons.error_outline,
+                                size: 16, color: AppColors.danger),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -221,23 +203,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _handleAuth(WidgetRef ref) async {
     final auth = ref.read(authProvider);
-    if (isCoordinator) {
-      final success = await auth.loginWithEmail(
-        _emailController.text,
-        _passwordController.text,
-      );
-      if (success && mounted) {
-        context.go(auth.getHomeRoute());
-      }
-    } else {
-      if (!_otpSent) {
-        setState(() => _otpSent = true);
-      } else {
-        final success = await auth.loginWithPhone(_phoneController.text);
-        if (success && mounted) {
-          context.go(auth.getHomeRoute());
-        }
-      }
+    
+    // Add this line!
+    auth.selectRole(widget.role);
+    
+    final success = await auth.loginWithEmail(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+    if (success && mounted) {
+      context.go(auth.getHomeRoute());
     }
   }
 }

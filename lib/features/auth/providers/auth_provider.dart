@@ -47,6 +47,42 @@ class AuthNotifier extends ChangeNotifier {
       return false;
     }
   }
+Future<bool> sendOtp(String phone) async {
+  _isLoading = true;
+  _error = null;
+  notifyListeners();
+  try {
+    await _authService.sendOtp(phone);
+    _isLoading = false;
+    notifyListeners();
+    return true;
+  } catch (e) {
+    _error = e.toString();
+    _isLoading = false;
+    notifyListeners();
+    return false;
+  }
+}
+
+Future<bool> verifyOtp(String phone, String otp) async {
+  _isLoading = true;
+  _error = null;
+  notifyListeners();
+  try {
+    final verified = await _authService.verifyOtp(otp);
+    if (verified) {
+      _user = await _authService.loginWithPhone(phone, _selectedRole ?? 'volunteer');
+    }
+    _isLoading = false;
+    notifyListeners();
+    return verified;
+  } catch (e) {
+    _error = e.toString();
+    _isLoading = false;
+    notifyListeners();
+    return false;
+  }
+}
 
   Future<bool> loginWithEmail(String email, String password) async {
     _isLoading = true;
@@ -54,6 +90,8 @@ class AuthNotifier extends ChangeNotifier {
     notifyListeners();
     try {
       _user = await _authService.loginWithEmail(email, password);
+      print('USER ROLE: ${_user?.role}'); // ADD THIS
+      print('HOME ROUTE: ${getHomeRoute()}'); // ADD THIS
       _isLoading = false;
       notifyListeners();
       return true;
@@ -101,7 +139,8 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   String getHomeRoute() {
-    switch (_user?.role ?? _selectedRole) {
+    // Use role from Firestore user, not selectedRole
+    switch (_user?.role) {
       case 'surveyor':
         return AppRoutes.surveyorHome;
       case 'volunteer':

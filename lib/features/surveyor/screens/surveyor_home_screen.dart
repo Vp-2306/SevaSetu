@@ -141,7 +141,7 @@ class _SurveyorDashboard extends ConsumerWidget {
                           highlight: true,
                         ),
                       ],
-                    ).animate(interval: 80.ms).fadeIn(duration: 400.ms),
+                    ).animate(delay: 80.ms).fadeIn(duration: 400.ms),
                   ],
                 ),
               ),

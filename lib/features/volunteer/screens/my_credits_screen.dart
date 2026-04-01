@@ -35,7 +35,7 @@ class MyCreditsScreen extends ConsumerWidget {
           TweenAnimationBuilder<int>(
             tween: IntTween(begin: 0, end: profile.credits),
             duration: const Duration(milliseconds: 1500),
-            builder: (_, value, __) => Text('$value',
+            builder: (_, value, _) => Text('$value',
               style: AppTextStyles.displayLarge.copyWith(color: AppColors.warning)),
           ).animate().fadeIn(duration: 400.ms),
           Text(AppStrings.totalCredits, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
@@ -102,7 +102,7 @@ class MyCreditsScreen extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(task.description, style: AppTextStyles.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text('${_daysAgo(task.createdAt)}', style: AppTextStyles.labelSmall.copyWith(
+                Text(_daysAgo(task.createdAt), style: AppTextStyles.labelSmall.copyWith(
                   color: AppColors.textMuted)),
               ])),
               CreditBadge(credits: 25),

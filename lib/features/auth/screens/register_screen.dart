@@ -21,9 +21,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  List<String> _selectedSkills = [];
-  List<String> _selectedDays = [];
-  List<String> _selectedSlots = [];
+  final List<String> _selectedSkills = [];
+  final List<String> _selectedDays = [];
+  final List<String> _selectedSlots = [];
 
   bool get isVolunteer => widget.role == 'volunteer';
 

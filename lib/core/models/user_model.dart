@@ -30,7 +30,31 @@ class UserModel {
       ngoId: json['ngoId'] as String?,
     );
   }
+// Add these after toJson()
 
+factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
+  return UserModel(
+    uid: uid,
+    name: map['name'] as String? ?? '',
+    email: map['email'] as String? ?? '',
+    phone: map['phone'] as String? ?? '',
+    role: map['role'] as String? ?? 'volunteer',
+    createdAt: map['createdAt'] != null
+        ? DateTime.parse(map['createdAt'] as String)
+        : DateTime.now(),
+    ngoId: map['ngoId'] as String?,
+  );
+}
+
+Map<String, dynamic> toMap() => {
+  'uid': uid,
+  'name': name,
+  'email': email,
+  'phone': phone,
+  'role': role,
+  'createdAt': createdAt.toIso8601String(),
+  'ngoId': ngoId,
+};
   Map<String, dynamic> toJson() => {
         'uid': uid,
         'name': name,

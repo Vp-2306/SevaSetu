@@ -7,7 +7,6 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/widgets/custom_bottom_nav.dart';
 import '../widgets/task_card.dart';
-import '../widgets/streak_banner.dart';
 import '../providers/volunteer_provider.dart';
 import 'heatmap_screen.dart';
 import 'my_credits_screen.dart';

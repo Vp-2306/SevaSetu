@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,11 +27,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: AppRoutes.splash,
-        builder: (_, __) => const SplashScreen(),
+        builder: (_, _) => const SplashScreen(),
       ),
       GoRoute(
         path: AppRoutes.roleSelect,
-        builder: (_, __) => const RoleSelectScreen(),
+        builder: (_, _) => const RoleSelectScreen(),
       ),
       GoRoute(
         path: AppRoutes.login,
@@ -46,19 +48,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Surveyor routes
       GoRoute(
         path: AppRoutes.surveyorHome,
-        builder: (_, __) => const SurveyorHomeScreen(),
+        builder: (_, _) => const SurveyorHomeScreen(),
       ),
       GoRoute(
         path: AppRoutes.newSurvey,
-        builder: (_, __) => const NewSurveyScreen(),
+        builder: (_, _) => const NewSurveyScreen(),
       ),
       GoRoute(
         path: AppRoutes.voiceSurvey,
-        builder: (_, __) => const VoiceSurveyScreen(),
+        builder: (_, _) => const VoiceSurveyScreen(),
       ),
       GoRoute(
         path: AppRoutes.photoSurvey,
-        builder: (_, __) => const PhotoSurveyScreen(),
+        builder: (_, _) => const PhotoSurveyScreen(),
       ),
       GoRoute(
         path: AppRoutes.surveyReview,
@@ -69,7 +71,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Volunteer routes
       GoRoute(
         path: AppRoutes.volunteerHome,
-        builder: (_, __) => const VolunteerHomeScreen(),
+        builder: (_, _) => const VolunteerHomeScreen(),
       ),
       GoRoute(
         path: '${AppRoutes.taskDetail}/:id',
@@ -79,16 +81,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.volunteerAvailability,
-        builder: (_, __) => const AvailabilityScreen(),
+        builder: (_, _) => const AvailabilityScreen(),
       ),
       GoRoute(
         path: '/volunteer/heatmap',
-        builder: (_, __) => const HeatmapScreen(),
+        builder: (_, _) => const HeatmapScreen(),
       ),
       // Coordinator routes
       GoRoute(
         path: AppRoutes.coordinatorHome,
-        builder: (_, __) => const CoordinatorHomeScreen(),
+        builder: (_, _) => const CoordinatorHomeScreen(),
       ),
       GoRoute(
         path: '${AppRoutes.coordinatorReview}/:id',
@@ -100,10 +102,17 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-void main() {
-  runApp(const ProviderScope(child: SevasetuApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    const ProviderScope(
+      child: SevasetuApp(),
+    ),
+  );
 }
-
 class SevasetuApp extends ConsumerWidget {
   const SevasetuApp({super.key});
 
